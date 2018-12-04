@@ -73,8 +73,7 @@ export default interface IObjectRecord {
 
     // biome numbers where this object will naturally occur according
     // to mapChance below
-    numBiomes: number;
-    biomes: string;
+    biomes: number[];
 
 
     // chance of occurrence naturally on map
@@ -274,12 +273,12 @@ const emptyObjectRecord: IObjectRecord = {
     id: -1,
     description: "",
     containable: false,
-    containSize: 0,
+    containSize: 1,
     vertContainRotationOffset: 0,
     permanent: false,
     noFlip: false,
     sideAccess: false,
-    minPickupAge: 0,
+    minPickupAge: 3,
     heldInHand: false,
     rideable: false,
     blocksWalking: false,
@@ -289,8 +288,7 @@ const emptyObjectRecord: IObjectRecord = {
     drawBehindPlayer: false,
     anySpritesBehindPlayer: false,
     spriteBehindPlayer: '',
-    numBiomes: 0,
-    biomes: '',
+    biomes: [],
     mapChance: 0,
     heatValue: 0,
     rValue: 0,
