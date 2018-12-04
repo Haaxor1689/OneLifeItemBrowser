@@ -29,19 +29,14 @@ export default interface ISprite {
     // 2 for parts of clothing that disappear when clothing taken off
     // all 0 for non-clothing objects
     invisibleWorn: boolean;
+
     behindSlots: boolean;
-    
-    // flags for sprites that are special body parts
-    spriteIsHead: boolean;
-    spriteIsBody: boolean;
-    spriteIsBackFoot: boolean;
-    spriteIsFrontFoot: boolean;
 
     // derrived automatically for person objects from sprite name
     // tags (if they contain Eyes or Mouth)
     // only filled in if sprite bank has been loaded before object bank
-    spriteIsEyes: boolean;
-    spriteIsMouth: boolean;
+    isEyes: boolean;
+    isMouth: boolean;
 }
 
 const emptySprite: ISprite = {
@@ -56,12 +51,8 @@ const emptySprite: ISprite = {
     invisibleHeld: false,
     invisibleWorn: false,
     behindSlots: false,
-    spriteIsHead: false,
-    spriteIsBody: false,
-    spriteIsBackFoot: false,
-    spriteIsFrontFoot: false,
-    spriteIsEyes: false,
-    spriteIsMouth: false,
+    isEyes: false,
+    isMouth: false,
 }
 
 export const getEmptySprite = () => cloneDeep(emptySprite);

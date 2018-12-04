@@ -1,9 +1,9 @@
-import { cloneDeep } from 'lodash'
-
 import IPosition, { getEmptyPosition } from './IPosition';
 import ISprite from './ISprite';
+import ISoundUsage, { getEmptySoundUsage } from './ISoundUsage';
+import ISlot from './ISlot';
 
-export default interface IObjectRecord {
+export interface IObjectRecord {
 
     id: number;
 
@@ -19,7 +19,6 @@ export default interface IObjectRecord {
     // this is an offset from that angle (default 0)
     vertContainRotationOffset: number;
 
-
     // can it not be picked up
     permanent: boolean;
 
@@ -33,10 +32,8 @@ export default interface IObjectRecord {
     // (no actions triggered from north or south)
     sideAccess: boolean;
 
-
     // age you have to be to to pick something up
     minPickupAge: number;
-
 
     // true for smaller objects that have heldOffsets relative to
     // front, moving hand
@@ -50,17 +47,14 @@ export default interface IObjectRecord {
     // (rideable overrides heldInHand)
     rideable: boolean;
 
-
-
     // true for objects that cannot be walked through
     blocksWalking: boolean;
 
     // true if sticks out and blocks on left or right of center tile
-    wide: boolean;
+    wide: () => boolean;
 
     leftBlockingRadius: number;
     rightBlockingRadius: number;
-
 
     // true for objects that are forced behind player
     // wide objects have this set to true automatically
@@ -69,12 +63,11 @@ export default interface IObjectRecord {
     // for individual sprite indices that are drawn behind
     // when whole object is not drawn behind
     anySpritesBehindPlayer: boolean;
-    spriteBehindPlayer: string;
+    spritesBehindPlayer: string;
 
     // biome numbers where this object will naturally occur according
     // to mapChance below
     biomes: number[];
-
 
     // chance of occurrence naturally on map
     // value between 0 and 1 inclusive
@@ -90,7 +83,7 @@ export default interface IObjectRecord {
     // between 0 and 1, how much heat is transmitted
     rValue: number;
 
-    person: boolean;
+    person: () => boolean;
     // true if this person should never spawn
     // (a person for testing, a template, etc.)
     personNoSpawn: boolean;
@@ -109,7 +102,6 @@ export default interface IObjectRecord {
     //  HOME arrow back toward it).
     homeMarker: boolean;
 
-
     // floor objects are drawn under everything else
     // and can have other objects in the same cell
     floor: boolean;
@@ -117,7 +109,6 @@ export default interface IObjectRecord {
     // for vertical walls, neighboring floors auto-extended to meet
     // them
     floorHugging: boolean;
-
 
     foodValue: number;
 
@@ -150,11 +141,10 @@ export default interface IObjectRecord {
     // (example:  lasso an animal, but has no effect on a person)
     useDistance: number;
 
-
-    // SoundUsage creationSound;
-    // SoundUsage usingSound;
-    // SoundUsage eatingSound;
-    // SoundUsage decaySound;
+    creationSound: ISoundUsage;
+    usingSound: ISoundUsage;
+    eatingSound: ISoundUsage;
+    decaySound: ISoundUsage;
 
     // true if creation sound should only be triggered
     // on player-caused creation of this object (not automatic,
@@ -165,23 +155,12 @@ export default interface IObjectRecord {
     // same-trigger sounds are playing
     creationSoundForce: boolean;
 
-
     // if it is a container, how many slots?
     // 0 if not a container
-    numSlots: number;
+    slots: ISlot[];
 
     // how big of a containable can fit in each slot?
     slotSize: number;
-
-    slotPos: IPosition;
-
-    // should objects be flipped vertically?
-    slotVert: string;
-
-    // index of this slot's parent in the sprite list
-    // or -1 if this slot doesn't follow the motion of a sprite
-    slotParent: string;
-
 
     // does being contained in one of this object's slots
     // adjust the passage of decay time?
@@ -203,8 +182,6 @@ export default interface IObjectRecord {
     // only filled in if sprite bank has been loaded before object bank
     mainEyesOffset: IPosition;
 
-
-
     // number of times this object can be used before
     // something different happens
     numUses: number;
@@ -216,12 +193,11 @@ export default interface IObjectRecord {
     // flags for sprites that vanish with additional
     // use of this object
     // (example:  berries getting picked)
-    spriteUseVanish: string;
+    spriteVanishIndexes: number[];
 
     // sprites that appear with use
     // (example:  wear marks on an axe head)
-    spriteUseAppear: string;
-
+    spriteAppearIndexes: number[];
 
     // NULL unless we are auto-populating use dummy objects
     // then contains ( numUses - 1 ) ids for auto-generated dummy objects
@@ -242,13 +218,11 @@ export default interface IObjectRecord {
     // used to avoid recomputing height repeatedly at client/server runtime
     cachedHeight: number;
 
-    apocalypseTrigger: boolean;
+    apocalypseTrigger: () => boolean;
 
-    monumentStep: boolean;
-    monumentDone: boolean;
-    monumentCall: boolean;
-
-
+    monumentStep: () => boolean;
+    monumentDone: () => boolean;
+    monumentCall: () => boolean;
 
     // NULL unless we are auto-populating variable objects
     // then contains ( N ) ids for auto-generated variable dummy objects
@@ -261,7 +235,6 @@ export default interface IObjectRecord {
 
     isVariableHidden: boolean;
 
-
     // flags derived from various &flags in object description
     written: boolean;
     writable: boolean;
@@ -269,76 +242,77 @@ export default interface IObjectRecord {
     mayHaveMetadata: boolean;
 }
 
-const emptyObjectRecord: IObjectRecord = {
-    id: -1,
-    description: "",
-    containable: false,
-    containSize: 1,
-    vertContainRotationOffset: 0,
-    permanent: false,
-    noFlip: false,
-    sideAccess: false,
-    minPickupAge: 3,
-    heldInHand: false,
-    rideable: false,
-    blocksWalking: false,
-    wide: false,
-    leftBlockingRadius: 0,
-    rightBlockingRadius: 0,
-    drawBehindPlayer: false,
-    anySpritesBehindPlayer: false,
-    spriteBehindPlayer: '',
-    biomes: [],
-    mapChance: 0,
-    heatValue: 0,
-    rValue: 0,
-    person: false,
-    personNoSpawn: false,
-    male: false,
-    race: 0,
-    deathMarker: false,
-    homeMarker: false,
-    floor: false,
-    floorHugging: false,
-    foodValue: 0,
-    speedMult: 0,
-    heldOffset: getEmptyPosition(),
-    clothing: '',
-    clothingOffset: getEmptyPosition(),
-    deadlyDistance: 0,
-    useDistance: 0,
-    creationSoundInitialOnly: false,
-    creationSoundForce: false,
-    numSlots: 0,
-    slotSize: 0,
-    slotPos: getEmptyPosition(),
-    slotVert: '',
-    slotParent: '',
-    slotTimeStretch: 0,
-    slotsLocked: false,
-    sprites: [],
-    mainEyesOffset: getEmptyPosition(),
-    numUses: 0,
-    useChance: 0,
-    spriteUseVanish: '',
-    spriteUseAppear: '',
-    useDummyIDs: '',
-    spriteSkipDrawing: '',
-    isUseDummy: false,
-    useDummyParent: 0,
-    cachedHeight: 0,
-    apocalypseTrigger: false,
-    monumentStep: false,
-    monumentDone: false,
-    monumentCall: false,
-    numVariableDummyIDs: 0,
-    variableDummyIDs: '',
-    isVariableDummy: false,
-    variableDummyParent: 0,
-    isVariableHidden: false,
-    written: false,
-    writable: false,
-    mayHaveMetadata: false,
-}
+export default class ObjectRecord implements IObjectRecord {
+    constructor(data?: IObjectRecord) { data && Object.assign(this, data); };
 
-export const getEmptyObjectRecord = () => cloneDeep(emptyObjectRecord);
+    id: number = -1;
+    description: string = '';
+    containable: boolean = false;
+    containSize: number = 1;
+    vertContainRotationOffset: number = 0;
+    permanent: boolean = false;
+    noFlip: boolean = false;
+    sideAccess: boolean = false;
+    minPickupAge: number = 3;
+    heldInHand: boolean = false;
+    rideable: boolean = false;
+    blocksWalking: boolean = false;
+    wide = (): boolean => this.leftBlockingRadius > 0 || this.rightBlockingRadius > 0;
+    leftBlockingRadius: number = 0;
+    rightBlockingRadius: number = 0;
+    drawBehindPlayer: boolean = false;
+    anySpritesBehindPlayer: boolean = false;
+    spritesBehindPlayer: string = '';
+    biomes: number[] = [];
+    mapChance: number = 0;
+    heatValue: number = 0;
+    rValue: number = 0;
+    person = (): boolean => this.race > 0;
+    personNoSpawn: boolean = false;
+    male: boolean = false;
+    race: number = 0;
+    deathMarker: boolean = false;
+    homeMarker: boolean = false;
+    floor: boolean = false;
+    floorHugging: boolean = false;
+    foodValue: number = 0;
+    speedMult: number = 0;
+    heldOffset: IPosition = getEmptyPosition();
+    clothing: string = '';
+    clothingOffset: IPosition = getEmptyPosition();
+    deadlyDistance: number = 0;
+    useDistance: number = 0;
+    creationSound: ISoundUsage = getEmptySoundUsage();
+    usingSound: ISoundUsage = getEmptySoundUsage();
+    eatingSound: ISoundUsage = getEmptySoundUsage();
+    decaySound: ISoundUsage = getEmptySoundUsage();
+    creationSoundInitialOnly: boolean = false;
+    creationSoundForce: boolean = false;
+    slotSize: number = 1;
+    slots: ISlot[] = [];
+    slotTimeStretch: number = 1.0;
+    slotsLocked: boolean = false;
+    sprites: ISprite[] = [];
+    mainEyesOffset: IPosition = getEmptyPosition();
+    numUses: number = 0;
+    useChance: number = 0;
+    spriteVanishIndexes: number[] = [-1];
+    spriteAppearIndexes: number[] = [-1];
+    useDummyIDs: string = '';
+    spriteSkipDrawing: string = '';
+    isUseDummy: boolean = false;
+    useDummyParent: number = 0;
+    cachedHeight: number = 0;
+    apocalypseTrigger = (): boolean => this.description === 'The Apocalypse';
+    monumentStep = (): boolean => this.description.indexOf('monumentStep') !== -1;
+    monumentDone = (): boolean => this.description.indexOf('monumentDone') !== -1;
+    monumentCall = (): boolean => this.description.indexOf('monumentCall') !== -1;
+    numVariableDummyIDs: number = 0;
+    variableDummyIDs: string = '';
+    isVariableDummy: boolean = false;
+    variableDummyParent: number = 0;
+    isVariableHidden: boolean = false;
+    written: boolean = false;
+    writable: boolean = false;
+    mayHaveMetadata: boolean = false;
+}
