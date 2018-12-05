@@ -6,8 +6,10 @@ import DataLoadingComponent from './Components/DataLoadingComponent';
 import NavbarComponent from './Components/NavbarComponent';
 import PageControlComponent from './Components/PageControlComponent';
 import DataManagerService from './Services/DataManagerService';
+import IObjectMetadata from './Models/IObjectMetadata';
 
 interface IAppState {
+    objectMetadata: IObjectMetadata[];
     objectRecords: IObjectRecord[];
 
     filter: string;
@@ -21,6 +23,7 @@ interface IAppState {
 
 export default class App extends React.Component<{}, IAppState> {
     public state: IAppState = {
+        objectMetadata: [],
         objectRecords: [],
         filter: "",
         filteredCount: 0,
@@ -35,19 +38,18 @@ export default class App extends React.Component<{}, IAppState> {
     }
 
     private initialize = async () => {
-        if (await DataManagerService.initializeAndUpdate()) {
-            DataManagerService.loadObjects(this.onLoadingProgress);
-        }
-        // Draw local data
+        var objectMetadata = await DataManagerService.initializeAndUpdate(this.onLoadingProgress)
+        this.setState((prevState) => ({
+            ...prevState,
+            objectMetadata
+        }));
     }
 
-    private getFilteredRecords = (): IObjectRecord[] => {
-        return this.state.objectRecords
+    private getFilteredObjects = (): IObjectMetadata[] => this.state.objectMetadata
             .filter((object) => App.stringContains(object.description, this.state.filter))
             .slice(this.state.currentPage * this.state.itemsPerPage, this.state.currentPage * this.state.itemsPerPage + this.state.itemsPerPage);
-    }
 
-    private isLoading = (): boolean => this.state.objectRecords.length === 0;
+    private isLoading = (): boolean => this.state.objectMetadata.length === 0;
 
     private static stringContains = (source: string, substr: string): boolean => source.toLowerCase().indexOf(substr.toLowerCase()) >= 0;
 
@@ -55,7 +57,7 @@ export default class App extends React.Component<{}, IAppState> {
         this.setState((prevState) => ({
             ...prevState,
             filter,
-            filteredCount: prevState.objectRecords.filter((object) => App.stringContains(object.description, filter)).length,
+            filteredCount: prevState.objectMetadata.filter((object) => App.stringContains(object.description, filter)).length,
             currentPage: 0
         }));
     }
@@ -74,8 +76,8 @@ export default class App extends React.Component<{}, IAppState> {
         }));
     }
 
-    private onObjectSelected = (objectRecord: IObjectRecord) => {
-        console.log("Clicked object " + objectRecord);
+    private onObjectSelected = (objectMetadata: IObjectMetadata) => {
+        console.log("Clicked object " + objectMetadata);
     }
 
     public render() {
@@ -87,7 +89,7 @@ export default class App extends React.Component<{}, IAppState> {
                         <div className="row">
                             { this.isLoading()
                                 ? <DataLoadingComponent progress={this.state.loadingProgress} /> 
-                                : <ObjectRecordListComponent objectRecords={this.getFilteredRecords()} onObjectSelected={this.onObjectSelected} /> }
+                                : <ObjectRecordListComponent objectMetadata={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} /> }
                         </div>
                         <div className="row">
                             { !this.isLoading() && 

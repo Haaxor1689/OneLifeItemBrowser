@@ -8,7 +8,6 @@ export default class ObjectRecordParser {
         var record = new ObjectRecord();
 
         var lines = data.split('\n');
-        var lineCount = lines.length;
         var line = 0;
 
         var match;
@@ -276,11 +275,6 @@ export default class ObjectRecordParser {
         if (match !== null) {
             record.cachedHeight = parseInt(match[1]);
             ++line;
-        }
-
-        console.log(record);
-        if (line > lineCount) {
-            throw "Line count doesn`t match up.";
         }
 
         return record;
