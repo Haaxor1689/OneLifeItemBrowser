@@ -1,10 +1,10 @@
 import * as React from 'react';
 import ObjectRecordListItemComponent from './ObjectRecordListItemComponent';
-import IObjectMetadata from 'src/Models/IObjectMetadata';
+import ObjectRecord, { IObjectRecordContainer } from 'src/Models/ObjectRecord';
 
 interface IObjectRecordListComponentProps {
-    objectMetadata: IObjectMetadata[];
-    onObjectSelected: (objectRecord: IObjectMetadata) => void;
+    objectRecord: IObjectRecordContainer;
+    onObjectSelected: (objectRecord: ObjectRecord) => void;
 }
 
 export default class ObjectRecordListComponent extends React.Component<IObjectRecordListComponentProps, {}> {
@@ -20,9 +20,9 @@ export default class ObjectRecordListComponent extends React.Component<IObjectRe
                     </tr>
                 </thead>
                 <tbody>
-                    {this.props.objectMetadata
+                    {Object.values(this.props.objectRecord)
                         .sort((lhs, rhs) => lhs.id - rhs.id)
-                        .map((objectMetadata) => <ObjectRecordListItemComponent onSelected={this.props.onObjectSelected}  objectMetadata={objectMetadata} />)}
+                        .map((objectRecord) => <ObjectRecordListItemComponent onSelected={this.props.onObjectSelected}  objectRecord={objectRecord} />)}
                 </tbody>
             </table>
         );

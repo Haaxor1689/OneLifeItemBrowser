@@ -1,16 +1,15 @@
 import * as React from 'react';
 
-import IObjectRecord from './Models/IObjectRecord';
+import ObjectRecord, { IObjectRecordContainer } from './Models/ObjectRecord';
 import ObjectRecordListComponent from './Components/ObjectRecordListComponent';
 import DataLoadingComponent from './Components/DataLoadingComponent';
 import NavbarComponent from './Components/NavbarComponent';
 import PageControlComponent from './Components/PageControlComponent';
 import DataManagerService from './Services/DataManagerService';
-import IObjectMetadata from './Models/IObjectMetadata';
+import IProgressInfo from './Models/IProgressInfo';
 
 interface IAppState {
-    objectMetadata: IObjectMetadata[];
-    objectRecords: IObjectRecord[];
+    objectRecords: IObjectRecordContainer;
 
     filter: string;
     filteredCount: number;
@@ -18,18 +17,16 @@ interface IAppState {
     itemsPerPage: number;
     currentPage: number;
 
-    loadingProgress: number;
+    progress?: IProgressInfo;
 }
 
 export default class App extends React.Component<{}, IAppState> {
     public state: IAppState = {
-        objectMetadata: [],
-        objectRecords: [],
+        objectRecords: {},
         filter: "",
         filteredCount: 0,
         itemsPerPage: 25,
         currentPage: 0,
-        loadingProgress: 0,
     };
 
     constructor(props: {}) {
@@ -38,18 +35,18 @@ export default class App extends React.Component<{}, IAppState> {
     }
 
     private initialize = async () => {
-        var objectMetadata = await DataManagerService.initializeAndUpdate(this.onLoadingProgress)
+        var objectRecords = await DataManagerService.initialize(this.onLoadingProgress)
         this.setState((prevState) => ({
             ...prevState,
-            objectMetadata
+            objectRecords,
         }));
     }
 
-    private getFilteredObjects = (): IObjectMetadata[] => this.state.objectMetadata
+    private getFilteredObjects = (): ObjectRecord[] => Object.values(this.state.objectRecords)
             .filter((object) => App.stringContains(object.description, this.state.filter))
             .slice(this.state.currentPage * this.state.itemsPerPage, this.state.currentPage * this.state.itemsPerPage + this.state.itemsPerPage);
 
-    private isLoading = (): boolean => this.state.objectMetadata.length === 0;
+    private isLoading = (): boolean => !!this.state.progress;
 
     private static stringContains = (source: string, substr: string): boolean => source.toLowerCase().indexOf(substr.toLowerCase()) >= 0;
 
@@ -57,27 +54,27 @@ export default class App extends React.Component<{}, IAppState> {
         this.setState((prevState) => ({
             ...prevState,
             filter,
-            filteredCount: prevState.objectMetadata.filter((object) => App.stringContains(object.description, filter)).length,
-            currentPage: 0
+            filteredCount: Object.values(prevState.objectRecords).filter((object) => App.stringContains(object.description, filter)).length,
+            currentPage: 0,
         }));
     }
 
     private onChangePage = (newPage: number) => {
         this.setState((prevState) => ({
             ...prevState,
-            currentPage: newPage
+            currentPage: newPage,
         }));
     }
 
-    private onLoadingProgress = (progress: number) => {
+    private onLoadingProgress = (progress: IProgressInfo) => {
         this.setState((prevState) => ({
             ...prevState,
-            loadingProgress: progress
+            loadingProgress: progress,
         }));
     }
 
-    private onObjectSelected = (objectMetadata: IObjectMetadata) => {
-        console.log("Clicked object " + objectMetadata);
+    private onObjectSelected = (objectRecord: ObjectRecord) => {
+        console.log("Clicked object " + objectRecord);
     }
 
     public render() {
@@ -88,8 +85,8 @@ export default class App extends React.Component<{}, IAppState> {
                     <div className="container">
                         <div className="row">
                             { this.isLoading()
-                                ? <DataLoadingComponent progress={this.state.loadingProgress} /> 
-                                : <ObjectRecordListComponent objectMetadata={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} /> }
+                                ? <DataLoadingComponent progress={this.state.progress!} /> 
+                                : <ObjectRecordListComponent objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} /> }
                         </div>
                         <div className="row">
                             { !this.isLoading() && 

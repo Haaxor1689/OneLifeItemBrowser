@@ -1,8 +1,8 @@
 import * as $ from 'jquery';
 import * as React from 'react';
 
-import IObjectRecord from 'src/Models/IObjectRecord';
-import ISprite from 'src/Models/ISprite';
+import IObjectRecord from 'src/Models/ObjectRecord';
+import ISprite from 'src/Models/Sprite';
 
 var tgaLib = require("../Lib/tga");
 const imgUrl = "https://raw.githubusercontent.com/jasonrohrer/OneLifeData7/master/sprites/";

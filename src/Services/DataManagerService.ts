@@ -1,42 +1,34 @@
-import GithubAPI from './GithubAPI';
-import ObjectRecordParser from './ObjectRecordParser';
-import IObjectRecord from 'src/Models/IObjectRecord';
-import IObjectMetadata from 'src/Models/IObjectMetadata';
+import Api from 'src/Services/Api';
+import { IObjectRecordContainer } from 'src/Models/ObjectRecord';
+import IProgressInfo from 'src/Models/IProgressInfo';
 
 export default class DataManagerService {
-    public static initializeAndUpdate = async (onProgress: (percentage: number) => void): Promise<IObjectMetadata[]> => {
-        var current: string = await GithubAPI.getCurrentCommit();
-        var saved: string = await GithubAPI.getSavedCommit();
+    public static initialize = async (onProgress: (progress: IProgressInfo) => void): Promise<IObjectRecordContainer> => {
+        var response = await Api.getRecords();
 
-        if (current === saved) {
-            return await GithubAPI.getSavedMetadata();
+        switch (response.outdated) {
+        case false: 
+            return response.records;
+        case true:
+        onProgress(response.progress);
+            DataManagerService.waitForUpdate(onProgress);
+            return {};
         }
-        
-        await GithubAPI.updateSavedCommit(current);
-        var records = await DataManagerService.loadObjects(onProgress);
-        return await DataManagerService.updateMetadata(records);
     }
 
-    public static loadObjects = async (onProgress: (percentage: number) => void) => {
-        var objectRecords: IObjectRecord[] = [];
-        var count = await GithubAPI.getObjectCount();
+    private static sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-        for (var i = 0; i < count; ++i) {
-            await GithubAPI.getObjectById(i)
-                .then((response) => objectRecords.push(ObjectRecordParser.parse(response)))
-                .catch(() => --count);
-            onProgress(objectRecords.length / count);
-        }
-        return objectRecords;
-    }
+    private static waitForUpdate = async (onProgress: (progress: IProgressInfo) => void) => {
+        do {
+            await DataManagerService.sleep(100);
+            var response = await Api.getRecords();
 
-    public static updateMetadata = async (objectRecords: IObjectRecord[]): Promise<IObjectMetadata[]> => {
-        var objectMetadata = objectRecords.map((record) => ({ 
-            id: record.id,
-            description: record.description
-        }));
-
-        await GithubAPI.updateSavedMetadata(objectMetadata);
-        return objectMetadata;
+            switch (response.outdated) {
+            case false:
+                return;
+            case true:
+                onProgress(response.progress);
+            }
+        } while (true);
     }
 }
