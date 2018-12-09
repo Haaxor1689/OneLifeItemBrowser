@@ -12,7 +12,8 @@ export default class DataManagerService {
             var response = await Api.getRecords();
 
             switch (response.outdated) {
-            case false: 
+            case false:
+                onProgress(undefined);
                 return response.records;
             case true:
                 onProgress(response.progress);
@@ -21,12 +22,12 @@ export default class DataManagerService {
             }
         } catch {
             onProgress({
-                percent: 1,
+                percent: -1,
                 message: "Unexpected error occured. Please refresh the page."
             })
-        } finally {
             return {};
         }
+        return {};
     }
 
     private static sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -47,7 +48,7 @@ export default class DataManagerService {
             } while (true);
         } catch {
             onProgress({
-                percent: 1,
+                percent: -1,
                 message: "Unexpected error occured. Please refresh the page."
             })
         }
