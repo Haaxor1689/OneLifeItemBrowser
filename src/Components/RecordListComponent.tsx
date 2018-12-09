@@ -22,7 +22,7 @@ export default class RecordListComponent extends React.Component<IObjectRecordLi
                 <tbody>
                     {Object.values(this.props.objectRecord)
                         .sort((lhs, rhs) => lhs.id - rhs.id)
-                        .map((objectRecord) => <RecordListItemComponent onSelected={this.props.onObjectSelected}  objectRecord={objectRecord} />)}
+                        .map((objectRecord) => <RecordListItemComponent key={objectRecord.id} onSelected={this.props.onObjectSelected}  objectRecord={objectRecord} />)}
                 </tbody>
             </table>
         );

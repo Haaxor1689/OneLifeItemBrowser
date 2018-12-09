@@ -6,17 +6,21 @@ interface IDataLoadingComponent {
 }
 
 export default class DataLoadingComponent extends React.Component<IDataLoadingComponent, {}> {
+    private bgStyle = (): string => this.props.progress.percent < 0 ? "danger" : "info";
+
     public render = () => {
         return (
             <div className="col data-loading">
-                <p className="text-center">{this.props.progress.message}</p>
-                <div className="progress">
-                    <div className="progress-bar progress-bar-striped progress-bar-animated" 
-                        role="progressbar"
-                        aria-valuenow={this.props.progress.percent * 100}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        style={{flex: this.props.progress.percent}}></div>
+                <div className={"alert alert-" + this.bgStyle()} role="alert">
+                    <p className="text-center">{this.props.progress.message}</p>
+                    <div className="progress">
+                        <div className={"progress-bar progress-bar-striped progress-bar-animated bg-" + this.bgStyle()}
+                            role="progressbar"
+                            aria-valuenow={(this.props.progress.percent < 0 ? 1 : this.props.progress.percent) * 100}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            style={{flex: this.props.progress.percent < 0 ? 1 : this.props.progress.percent}}></div>
+                    </div>
                 </div>
             </div>
         );

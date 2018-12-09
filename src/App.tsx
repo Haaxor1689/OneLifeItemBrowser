@@ -30,7 +30,7 @@ export default class App extends React.Component<{}, IAppState> {
     };
 
     componentDidMount = async () => {
-        var objectRecords = await DataManagerService.initialize(this.onLoadingProgress)
+        const objectRecords = await DataManagerService.initialize(this.onLoadingProgress);
         this.setState((prevState) => ({
             ...prevState,
             objectRecords,
