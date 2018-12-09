@@ -16,7 +16,7 @@
     "react-scripts-ts": "3.1.0"
   },
   "scripts": {
-    "start": "set HTTPS=true&&react-scripts-ts start",
+    "start": "set HTTPS=true&&set PORT=3006&&react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "predeploy": "npm run build",

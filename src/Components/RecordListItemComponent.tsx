@@ -6,7 +6,7 @@ interface IObjectRecordListItemComponentProps {
     onSelected: (objectRecord: ObjectRecord) => void;
 }
 
-export default class ObjectRecordListItemComponent extends React.Component<IObjectRecordListItemComponentProps, {}> {
+export default class RecordListItemComponent extends React.Component<IObjectRecordListItemComponentProps, {}> {
     public render = () => {
         return (
             <tr onClick={() => this.props.onSelected(this.props.objectRecord)}>

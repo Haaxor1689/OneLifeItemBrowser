@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import ObjectRecord, { IObjectRecordContainer } from './Models/ObjectRecord';
-import ObjectRecordListComponent from './Components/ObjectRecordListComponent';
+import RecordListComponent from './Components/RecordListComponent';
 import DataLoadingComponent from './Components/DataLoadingComponent';
 import NavbarComponent from './Components/NavbarComponent';
 import PageControlComponent from './Components/PageControlComponent';
@@ -29,12 +29,7 @@ export default class App extends React.Component<{}, IAppState> {
         currentPage: 0,
     };
 
-    constructor(props: {}) {
-        super(props);
-        this.initialize();
-    }
-
-    private initialize = async () => {
+    componentDidMount = async () => {
         var objectRecords = await DataManagerService.initialize(this.onLoadingProgress)
         this.setState((prevState) => ({
             ...prevState,
@@ -46,7 +41,9 @@ export default class App extends React.Component<{}, IAppState> {
             .filter((object) => App.stringContains(object.description, this.state.filter))
             .slice(this.state.currentPage * this.state.itemsPerPage, this.state.currentPage * this.state.itemsPerPage + this.state.itemsPerPage);
 
-    private isLoading = (): boolean => !!this.state.progress;
+    private showLoading = (): boolean => this.state.progress !== undefined;
+
+    private showPageControll = (): boolean => Object.keys(this.state.objectRecords).length > this.state.itemsPerPage;
 
     private static stringContains = (source: string, substr: string): boolean => source.toLowerCase().indexOf(substr.toLowerCase()) >= 0;
 
@@ -66,10 +63,10 @@ export default class App extends React.Component<{}, IAppState> {
         }));
     }
 
-    private onLoadingProgress = (progress: IProgressInfo) => {
+    private onLoadingProgress = (progress?: IProgressInfo) => {
         this.setState((prevState) => ({
             ...prevState,
-            loadingProgress: progress,
+            progress,
         }));
     }
 
@@ -84,12 +81,14 @@ export default class App extends React.Component<{}, IAppState> {
                 <main role="main">
                     <div className="container">
                         <div className="row">
-                            { this.isLoading()
-                                ? <DataLoadingComponent progress={this.state.progress!} /> 
-                                : <ObjectRecordListComponent objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} /> }
+                            { this.showLoading() &&
+                                <DataLoadingComponent progress={this.state.progress!} /> }
                         </div>
                         <div className="row">
-                            { !this.isLoading() && 
+                            <RecordListComponent objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} />
+                        </div>
+                        <div className="row">
+                            { this.showPageControll() &&
                                 <PageControlComponent 
                                     currentPage={this.state.currentPage} 
                                     pageCount={Math.ceil(this.state.filteredCount / this.state.itemsPerPage) - 1}
