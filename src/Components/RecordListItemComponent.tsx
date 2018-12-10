@@ -1,4 +1,8 @@
 import * as React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faAppleAlt, faTshirt, faHorse, faWeightHanging } from '@fortawesome/free-solid-svg-icons'
+
 import ObjectRecord from 'src/Models/ObjectRecord';
 
 interface IObjectRecordListItemComponentProps {
@@ -8,18 +12,18 @@ interface IObjectRecordListItemComponentProps {
 
 export default class RecordListItemComponent extends React.Component<IObjectRecordListItemComponentProps, {}> {
     public render = () => {
+        library.add(faAppleAlt, faTshirt, faHorse, faWeightHanging);
         return (
             <tr onClick={() => this.props.onSelected(this.props.objectRecord)}>
                 <th scope="row">{this.props.objectRecord.id}</th>
                 <td>{this.props.objectRecord.description}</td>
-                <td>{this.props.objectRecord.displaySize()}</td>
+                <td>{this.props.objectRecord.containable ? String(this.props.objectRecord.containSize) : "\u221e"}</td>
                 <td>
-                    {this.props.objectRecord.isEdible() && <span className="glyphicon glyphicon-apple"></span>}
-                    {this.props.objectRecord.isClothing() && <span className="glyphicon glyphicon-sunglasses"></span>}
-                    {this.props.objectRecord.rideable && <span className="glyphicon glyphicon-plane"></span>}
-                    {this.props.objectRecord.permanent && <span className="glyphicon glyphicon-tower"></span>}
+                    <FontAwesomeIcon icon="apple-alt" className={this.props.objectRecord.foodValue > 0 ? "text-light" : "text-muted"}/>
+                    <FontAwesomeIcon icon="tshirt" className={this.props.objectRecord.clothing !== 'n' ? "text-light" : "text-muted"}/>
+                    <FontAwesomeIcon icon="horse" className={this.props.objectRecord.rideable ? "text-light" : "text-muted"}/>
+                    <FontAwesomeIcon icon="weight-hanging" className={this.props.objectRecord.permanent ? "text-light" : "text-muted"}/>
                 </td>
-                <td>Placeholder actions</td>
             </tr>
         );
     }
