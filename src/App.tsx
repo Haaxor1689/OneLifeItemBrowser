@@ -7,9 +7,12 @@ import NavbarComponent from './Components/NavbarComponent';
 import PageControlComponent from './Components/PageControlComponent';
 import DataManagerService from './Services/DataManagerService';
 import IProgressInfo from './Models/IProgressInfo';
+import ObjectRecordComponent from './Components/ObjectRecordComponent';
 
 interface IAppState {
     objectRecords: IObjectRecordContainer;
+
+    selectedRecord?: number;
 
     filter: string;
     filteredCount: number;
@@ -23,6 +26,7 @@ interface IAppState {
 export default class App extends React.Component<{}, IAppState> {
     public state: IAppState = {
         objectRecords: {},
+        selectedRecord: undefined,
         filter: "",
         filteredCount: 0,
         itemsPerPage: 25,
@@ -30,7 +34,7 @@ export default class App extends React.Component<{}, IAppState> {
     };
 
     componentDidMount = async () => {
-        const objectRecords = await DataManagerService.initialize(this.onLoadingProgress);
+        const objectRecords = await DataManagerService.initialize(this.onLoadingProgress, this.onLoadingDone);
         this.setState((prevState) => ({
             ...prevState,
             objectRecords,
@@ -70,8 +74,25 @@ export default class App extends React.Component<{}, IAppState> {
         }));
     }
 
+    private onLoadingDone = (objectRecords: IObjectRecordContainer) => {
+        this.setState((prevState) => ({
+            ...prevState,
+            objectRecords,
+        }));
+    }
+
     private onObjectSelected = (objectRecord: ObjectRecord) => {
-        console.log("Clicked object " + objectRecord);
+        this.setState((prevState) => ({
+            ...prevState,
+            selectedRecord: objectRecord.id,
+        }));
+    }
+
+    private onObjectClosed = () => {
+        this.setState((prevState) => ({
+            ...prevState,
+            selectedRecord: undefined,
+        }));
     }
 
     public render() {
@@ -84,17 +105,24 @@ export default class App extends React.Component<{}, IAppState> {
                             { this.showLoading() &&
                                 <DataLoadingComponent progress={this.state.progress!} /> }
                         </div>
-                        <div className="row">
-                            <RecordListComponent objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} />
-                        </div>
-                        <div className="row">
-                            { this.showPageControll() &&
-                                <PageControlComponent 
-                                    currentPage={this.state.currentPage} 
-                                    pageCount={Math.ceil(this.state.filteredCount / this.state.itemsPerPage) - 1}
-                                    changePage={this.onChangePage} /> }
-                        </div>
                     </div>
+                    { !this.state.selectedRecord 
+                    ?
+                        <div className="container">
+                            <div className="row">
+                                <RecordListComponent objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} />
+                            </div>
+                            <div className="row">
+                                { this.showPageControll() &&
+                                    <PageControlComponent 
+                                        currentPage={this.state.currentPage} 
+                                        pageCount={Math.ceil(this.state.filteredCount / this.state.itemsPerPage) - 1}
+                                        changePage={this.onChangePage} /> }
+                            </div>
+                        </div>
+                    :
+                        <ObjectRecordComponent objectRecord={this.state.objectRecords[this.state.selectedRecord]} close={this.onObjectClosed} />
+                    }
                 </main>
             </div>
         );
