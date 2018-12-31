@@ -20,7 +20,7 @@ export default class NavbarComponent extends React.Component<INavbarComponentPro
             <nav className="navbar navbar-dark bg-dark fixed-top">
                 <div className="container">
                     <a className="navbar-brand h1 text-light" href="#">One life item browser</a>
-                    <form className="form-inline" onSubmit={this.onSearchSubmit}>
+                    <form className="form-inline d-none d-sm-block" onSubmit={this.onSearchSubmit}>
                         <input className="form-control mr-sm-2" type="search" name="filter" placeholder="Search" aria-label="Search" />
                         <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
