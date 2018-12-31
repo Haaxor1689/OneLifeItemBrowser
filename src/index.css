@@ -6,6 +6,10 @@ body {
     margin: 1rem 0;
 }
 
+.key-str {
+    padding-right: 1rem;
+}
+
 .trait-icon {
     padding: 0;
     padding-right: 0.5rem;
