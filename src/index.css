@@ -5,3 +5,8 @@ body {
 .data-loading {
     margin: 1rem 0;
 }
+
+.trait-icon {
+    padding: 0;
+    padding-right: 0.5rem;
+}

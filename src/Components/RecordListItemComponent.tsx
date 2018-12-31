@@ -19,10 +19,18 @@ export default class RecordListItemComponent extends React.Component<IObjectReco
                 <td>{this.props.objectRecord.description}</td>
                 <td>{this.props.objectRecord.containable ? String(this.props.objectRecord.containSize) : "\u221e"}</td>
                 <td>
-                    <FontAwesomeIcon icon="apple-alt" className={this.props.objectRecord.foodValue > 0 ? "text-light" : "text-muted"}/>
+                    <i className="trait-icon" title="Edible">
+                        <FontAwesomeIcon icon="apple-alt" className={this.props.objectRecord.foodValue > 0 ? "text-light" : "text-muted"}/>
+                    </i>
+                    <i className="trait-icon" title="Equipable">
                     <FontAwesomeIcon icon="tshirt" className={this.props.objectRecord.clothing !== 'n' ? "text-light" : "text-muted"}/>
+                    </i>
+                    <i className="trait-icon" title="Rideable">
                     <FontAwesomeIcon icon="horse" className={this.props.objectRecord.rideable ? "text-light" : "text-muted"}/>
+                    </i>
+                    <i className="trait-icon" title="Permanent">
                     <FontAwesomeIcon icon="weight-hanging" className={this.props.objectRecord.permanent ? "text-light" : "text-muted"}/>
+                    </i>
                 </td>
             </tr>
         );
