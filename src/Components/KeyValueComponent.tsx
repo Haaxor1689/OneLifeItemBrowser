@@ -13,7 +13,7 @@ export default class KeyValueComponent extends React.Component<IKeyValueComponen
                     {this.props.keyStr}:
                 </span>
                 <span>
-                    {this.props.value}
+                    {JSON.stringify(this.props.value)}
                 </span>
             </div>
         );
