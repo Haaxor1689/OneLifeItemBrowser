@@ -523,12 +523,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 *
 	 * @returns {object} CanvasElement
 	 */
-	Targa.prototype.getCanvas = function targaGetCanvas()
+	Targa.prototype.getCanvas = function targaGetCanvas( canvas )
 	{
-		var canvas, ctx, imageData;
+		var ctx, imageData;
 
-		canvas    = document.createElement('canvas');
-		ctx       = canvas.getContext('2d');
+		if (!canvas) {
+			canvas = document.createElement('canvas');
+		}
+		ctx = canvas.getContext('2d');
 		imageData = ctx.createImageData(this.header.width, this.header.height);
 
 		canvas.width  = this.header.width;
