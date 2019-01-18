@@ -56,7 +56,6 @@ export default class App extends React.Component<{}, IAppState> {
             ...prevState,
             filter,
             filteredCount: Object.values(prevState.objectRecords).filter((object) => App.stringContains(object.description, filter)).length,
-            currentPage: 0,
         }));
     }
 
@@ -78,6 +77,7 @@ export default class App extends React.Component<{}, IAppState> {
         this.setState((prevState) => ({
             ...prevState,
             objectRecords,
+            filteredCount: Object.keys(objectRecords).length,
         }));
     }
 
