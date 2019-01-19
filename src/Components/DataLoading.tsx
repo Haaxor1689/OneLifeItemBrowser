@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Col, Alert, Progress, Container, Row } from 'reactstrap';
 
-import IProgressInfo from 'src/Models/IProgressInfo';
+import IProgressInfo from './../Models/IProgressInfo';
 
 interface IDataLoadingComponent {
     progress: IProgressInfo;

@@ -1,7 +1,7 @@
-import * as $ from 'jquery';
+import $ from 'jquery';
 
-import Sprite from 'src/Models/Sprite';
-import Position from 'src/Models/Position';
+import Sprite from './../Models/Sprite';
+import Position from './../Models/Position';
 
 var tgaLib = require("../Lib/tga");
 

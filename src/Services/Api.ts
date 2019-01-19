@@ -1,6 +1,6 @@
-import * as $ from "jquery";
+import $ from "jquery";
 
-import IRecordsResponse from 'src/Models/IRecordResponse';
+import IRecordsResponse from './../Models/IRecordResponse';
 
 export default class Api {
     private static readonly baseUrl: string = false//location.hostname === "localhost" 

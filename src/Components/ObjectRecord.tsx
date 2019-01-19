@@ -3,10 +3,10 @@ import { Container, Row, Col, Button } from 'reactstrap';
 
 import KeyValue from './KeyValue';
 
-import SpriteRendererService from 'src/Services/SpriteRendererService';
+import SpriteRendererService from './../Services/SpriteRendererService';
 
-import ObjectRecordModel from 'src/Models/ObjectRecord';
-import Sprite from 'src/Models/Sprite';
+import ObjectRecordModel from './../Models/ObjectRecord';
+import Sprite from './../Models/Sprite';
 
 
 interface IObjectRecordComponentProps {

@@ -1,7 +1,8 @@
 import * as React from 'react';
-import RecordListItem from './RecordListItem';
-import ObjectRecord, { IObjectRecordContainer } from 'src/Models/ObjectRecord';
 import { Table, Row } from 'reactstrap';
+
+import ObjectRecord, { IObjectRecordContainer } from './../Models/ObjectRecord';
+import RecordListItem from './RecordListItem';
 
 interface IObjectRecordListComponentProps {
     objectRecord: IObjectRecordContainer;

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAppleAlt, faTshirt, faHorse, faWeightHanging } from '@fortawesome/free-solid-svg-icons'
 
-import ObjectRecord from 'src/Models/ObjectRecord';
+import ObjectRecord from './../Models/ObjectRecord';
 
 interface IObjectRecordListItemComponentProps {
     objectRecord: ObjectRecord,
