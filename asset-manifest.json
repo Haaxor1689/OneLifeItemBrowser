@@ -1,6 +1,13 @@
 {
-  "main.css": "static/css/main.b6ebfde2.css",
-  "main.css.map": "static/css/main.b6ebfde2.css.map",
-  "main.js": "static/js/main.6e8531d0.js",
-  "main.js.map": "static/js/main.6e8531d0.js.map"
+  "main.css": "/OneLifeItemBrowser/static/css/main.c052e45a.chunk.css",
+  "main.js": "/OneLifeItemBrowser/static/js/main.2e52cfa7.chunk.js",
+  "main.js.map": "/OneLifeItemBrowser/static/js/main.2e52cfa7.chunk.js.map",
+  "static/js/1.1a104c92.chunk.js": "/OneLifeItemBrowser/static/js/1.1a104c92.chunk.js",
+  "static/js/1.1a104c92.chunk.js.map": "/OneLifeItemBrowser/static/js/1.1a104c92.chunk.js.map",
+  "runtime~main.js": "/OneLifeItemBrowser/static/js/runtime~main.1c88e221.js",
+  "runtime~main.js.map": "/OneLifeItemBrowser/static/js/runtime~main.1c88e221.js.map",
+  "static/css/main.c052e45a.chunk.css.map": "/OneLifeItemBrowser/static/css/main.c052e45a.chunk.css.map",
+  "index.html": "/OneLifeItemBrowser/index.html",
+  "precache-manifest.29770cfd1ea7155d2dfa1e1c58ccc9c5.js": "/OneLifeItemBrowser/precache-manifest.29770cfd1ea7155d2dfa1e1c58ccc9c5.js",
+  "service-worker.js": "/OneLifeItemBrowser/service-worker.js"
 }
