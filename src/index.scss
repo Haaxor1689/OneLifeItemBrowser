@@ -2,38 +2,10 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 
 @import './Components/DataLoading';
+@import './Components/KeyValue';
+@import './Components/ObjectRecord';
+@import './Components/RecordListItem';
 
 body {
     padding-top: 4.5rem;
-}
-
-.key-str {
-    padding-right: 1rem;
-}
-
-.trait-icon {
-    padding: 0;
-    padding-right: 0.5rem;
-}
-
-.sprite {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    overflow: hidden;
-}
-
-.sprite-preview {
-    height: 500px;
-}
-
-.sprite-info {
-    margin-bottom: 1rem;
-}
-
-.sprite-info-preview {
-    position: relative;
-    width: 100%;
-    padding-top: 100%;
 }

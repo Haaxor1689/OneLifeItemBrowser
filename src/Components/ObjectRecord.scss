@@ -1,0 +1,27 @@
+.sprite-preview {
+    @extend .border;
+    @extend .rounded;
+
+    height: 500px;
+}
+
+.sprite-info {
+    margin-bottom: 1rem;
+
+    .sprite-info-preview {
+        @extend .border;
+        @extend .rounded;
+
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+    }
+}
+
+.sprite {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}

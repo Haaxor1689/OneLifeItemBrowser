@@ -4,7 +4,7 @@ interface INavbarComponentProps {
     onSearch: (event: string) => void;
 }
 
-export default class NavbarComponent extends React.Component<INavbarComponentProps, {}> {
+export default class NavbarComponent extends React.Component<INavbarComponentProps> {
     private onSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.target as HTMLFormElement);

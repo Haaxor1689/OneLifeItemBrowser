@@ -1,0 +1,12 @@
+.trait-icon {
+    padding: 0;
+    padding-right: 0.5rem;
+}
+
+.trait-icon.trait-icon-active {
+    @extend .text-light;
+}
+
+.trait-icon.trait-icon-inactive {
+    @extend .text-dark;
+}
