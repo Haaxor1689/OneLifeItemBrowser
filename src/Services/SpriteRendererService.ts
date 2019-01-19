@@ -1,9 +1,8 @@
 import $ from 'jquery';
+import Targa from './../Lib/tga';
 
 import Sprite from './../Models/Sprite';
 import Position from './../Models/Position';
-
-var tgaLib = require("../Lib/tga");
 
 interface SpriteInfo {
     sprite: Sprite;
@@ -38,9 +37,9 @@ export default class SpriteRendererService {
 
     private static getCanvas = async (sprite: Sprite): Promise<HTMLCanvasElement> => {
         return await new Promise<HTMLCanvasElement>((resolve, reject) => {
-            var tga: any = new tgaLib.TGA();
+            const tga = new Targa();
             tga.open(SpriteRendererService.imgUrl + sprite.id + ".tga", () => {
-                resolve(tga.getCanvas($("#" + sprite.id).get()[0]));
+                resolve(tga.getCanvas($("#" + sprite.id).get()[0] as HTMLCanvasElement));
             });
         })
         .catch(err => {throw err});

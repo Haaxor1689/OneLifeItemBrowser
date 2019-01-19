@@ -1,9 +1,9 @@
- /**
- * @fileoverview jsTGALoader - Javascript loader for TGA file
- * @author Vincent Thibault
- * @version 1.2.0
- * @blog http://blog.robrowser.com/javascript-tga-loader.html
- */
+/**
+* @fileoverview jsTGALoader - Javascript loader for TGA file
+* @author Vincent Thibault
+* @version 1.2.0
+* @blog http://blog.robrowser.com/javascript-tga-loader.html
+*/
 
 /* Copyright (c) 2013, Vincent Thibault. All rights reserved.
 
@@ -27,46 +27,35 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-(function(_global)
-{
-	'use strict';
+/**
+ * @var {object} TGA type constants
+ */
+enum Type {
+	NO_DATA = 0,
+	INDEXED = 1,
+	RGB = 2,
+	GREY = 3,
+	RLE_INDEXED = 9,
+	RLE_RGB = 10,
+	RLE_GREY = 11
+};
 
+/**
+ * @var {object} TGA origin constants
+ */
+enum Origin {
+	BOTTOM_LEFT = 0x00,
+	BOTTOM_RIGHT = 0x01,
+	TOP_LEFT = 0x02,
+	TOP_RIGHT = 0x03,
+	SHIFT = 0x04,
+	MASK = 0x30
+};
 
-	/**
-	 * TGA Namespace
-	 * @constructor
-	 */
-	function Targa()
-	{
-	}
-
-
-	/**
-	 * @var {object} TGA type constants
-	 */
-	Targa.Type = {
-		NO_DATA:      0,
-		INDEXED:      1,
-		RGB:          2,
-		GREY:         3,
-		RLE_INDEXED:  9,
-		RLE_RGB:     10,
-		RLE_GREY:    11
-	};
-
-
-	/**
-	 * @var {object} TGA origin constants
-	 */
-	Targa.Origin = {
-		BOTTOM_LEFT:  0x00,
-		BOTTOM_RIGHT: 0x01,
-		TOP_LEFT:     0x02,
-		TOP_RIGHT:    0x03,
-		SHIFT:        0x04,
-		MASK:         0x30
-	};
-
+export default class Targa {
+	private header: any;
+	private palette: any;
+	private imageData?: Uint8Array;
 
 	/**
 	 * Check the header of TGA file to detect errors
@@ -74,10 +63,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {object} tga header structure
 	 * @throws Error
 	 */
-	function checkHeader( header )
-	{
+	private checkHeader = (header: any) => {
 		// What the need of a file without data ?
-		if (header.imageType === Targa.Type.NO_DATA) {
+		if (header.imageType === Type.NO_DATA) {
 			throw new Error('Targa::checkHeader() - No data');
 		}
 
@@ -99,10 +87,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 		}
 
 		// Check pixel size
-		if (header.pixelDepth !== 8  &&
-		    header.pixelDepth !== 16 &&
-		    header.pixelDepth !== 24 &&
-		    header.pixelDepth !== 32) {
+		if (header.pixelDepth !== 8 &&
+			header.pixelDepth !== 16 &&
+			header.pixelDepth !== 24 &&
+			header.pixelDepth !== 32) {
 			throw new Error('Targa::checkHeader() - Invalid pixel size "' + header.pixelDepth + '"');
 		}
 	}
@@ -116,17 +104,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {number} pixel count
 	 * @param {number} output buffer size
 	 */
-	function decodeRLE( data, offset, pixelSize, outputSize)
-	{
+	private decodeRLE = (data: any, offset: any, pixelSize: any, outputSize: any) => {
 		var pos, c, count, i;
 		var pixels, output;
 
 		output = new Uint8Array(outputSize);
 		pixels = new Uint8Array(pixelSize);
-		pos    = 0;
+		pos = 0;
 
 		while (pos < outputSize) {
-			c     = data[offset++];
+			c = data[offset++];
 			count = (c & 0x7f) + 1;
 
 			// RLE pixels.
@@ -171,8 +158,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {number} x_end   - stop at pixel x.
 	 * @returns {Array} imageData
 	 */
-	function getImageData8bits(imageData, indexes, colormap, width, y_start, y_step, y_end, x_start, x_step, x_end)
-	{
+	private getImageData8bits = (imageData: any, indexes: any, colormap: any, width: any, y_start: any, y_step: any, y_end: any, x_start: any, x_step: any, x_end: any) => {
 		var color, i, x, y;
 
 		for (i = 0, y = y_start; y !== y_end; y += y_step) {
@@ -204,8 +190,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {number} x_end   - stop at pixel x.
 	 * @returns {Array} imageData
 	 */
-	function getImageData16bits(imageData, pixels, colormap, width, y_start, y_step, y_end, x_start, x_step, x_end)
-	{
+	private getImageData16bits = (imageData: any, pixels: any, colormap: any, width: any, y_start: any, y_step: any, y_end: any, x_start: any, x_step: any, x_end: any) => {
 		var color, i, x, y;
 
 		for (i = 0, y = y_start; y !== y_end; y += y_step) {
@@ -237,8 +222,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {number} x_end   - stop at pixel x.
 	 * @returns {Array} imageData
 	 */
-	function getImageData24bits(imageData, pixels, colormap, width, y_start, y_step, y_end, x_start, x_step, x_end)
-	{
+	private getImageData24bits = (imageData: any, pixels: any, colormap: any, width: any, y_start: any, y_step: any, y_end: any, x_start: any, x_step: any, x_end: any) => {
 		var i, x, y;
 
 		for (i = 0, y = y_start; y !== y_end; y += y_step) {
@@ -269,8 +253,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {number} x_end   - stop at pixel x.
 	 * @returns {Array} imageData
 	 */
-	function getImageData32bits(imageData, pixels, colormap, width, y_start, y_step, y_end, x_start, x_step, x_end)
-	{
+	private getImageData32bits = (imageData: any, pixels: any, colormap: any, width: any, y_start: any, y_step: any, y_end: any, x_start: any, x_step: any, x_end: any) => {
 		var i, x, y;
 
 		for (i = 0, y = y_start; y !== y_end; y += y_step) {
@@ -301,8 +284,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {number} x_end   - stop at pixel x.
 	 * @returns {Array} imageData
 	 */
-	function getImageDataGrey8bits(imageData, pixels, colormap, width, y_start, y_step, y_end, x_start, x_step, x_end)
-	{
+	private getImageDataGrey8bits = (imageData: any, pixels: any, colormap: any, width: any, y_start: any, y_step: any, y_end: any, x_start: any, x_step: any, x_end: any) => {
 		var color, i, x, y;
 
 		for (i = 0, y = y_start; y !== y_end; y += y_step) {
@@ -334,8 +316,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {number} x_end   - stop at pixel x.
 	 * @returns {Array} imageData
 	 */
-	function getImageDataGrey16bits(imageData, pixels, colormap, width, y_start, y_step, y_end, x_start, x_step, x_end)
-	{
+	private getImageDataGrey16bits = (imageData: any, pixels: any, colormap: any, width: any, y_start: any, y_step: any, y_end: any, x_start: any, x_step: any, x_end: any) => {
 		var i, x, y;
 
 		for (i = 0, y = y_start; y !== y_end; y += y_step) {
@@ -357,13 +338,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {string} path - Path of the filename to load
 	 * @param {function} callback - callback to trigger when the file is loaded
 	 */
-	Targa.prototype.open = function targaOpen(path, callback)
-	{
-		var req, tga = this;
-		req = new XMLHttpRequest();
+	public open = (path: any, callback: any) => {
+		var tga = this;
+		var req = new XMLHttpRequest();
 		req.open('GET', path, true);
 		req.responseType = 'arraybuffer';
-		req.onload = function() {
+		req.onload = function () {
 			if (this.status === 200) {
 				tga.load(new Uint8Array(req.response));
 				if (callback) {
@@ -380,8 +360,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 *
 	 * @param {Uint8Array} data - TGA file buffer array
 	 */
-	Targa.prototype.load = function targaLoad( data )
-	{
+	public load = (data: any) => {
 		var offset = 0;
 
 		// Not enough data to contain header ?
@@ -391,27 +370,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 		// Read TgaHeader
 		this.header = {
-			/* 0x00  BYTE */  idLength:       data[offset++],
-			/* 0x01  BYTE */  colorMapType:   data[offset++],
-			/* 0x02  BYTE */  imageType:      data[offset++],
-			/* 0x03  WORD */  colorMapIndex:  data[offset++] | data[offset++] << 8,
+			/* 0x00  BYTE */  idLength: data[offset++],
+			/* 0x01  BYTE */  colorMapType: data[offset++],
+			/* 0x02  BYTE */  imageType: data[offset++],
+			/* 0x03  WORD */  colorMapIndex: data[offset++] | data[offset++] << 8,
 			/* 0x05  WORD */  colorMapLength: data[offset++] | data[offset++] << 8,
-			/* 0x07  BYTE */  colorMapDepth:  data[offset++],
-			/* 0x08  WORD */  offsetX:        data[offset++] | data[offset++] << 8,
-			/* 0x0a  WORD */  offsetY:        data[offset++] | data[offset++] << 8,
-			/* 0x0c  WORD */  width:          data[offset++] | data[offset++] << 8,
-			/* 0x0e  WORD */  height:         data[offset++] | data[offset++] << 8,
-			/* 0x10  BYTE */  pixelDepth:     data[offset++],
-			/* 0x11  BYTE */  flags:          data[offset++]
+			/* 0x07  BYTE */  colorMapDepth: data[offset++],
+			/* 0x08  WORD */  offsetX: data[offset++] | data[offset++] << 8,
+			/* 0x0a  WORD */  offsetY: data[offset++] | data[offset++] << 8,
+			/* 0x0c  WORD */  width: data[offset++] | data[offset++] << 8,
+			/* 0x0e  WORD */  height: data[offset++] | data[offset++] << 8,
+			/* 0x10  BYTE */  pixelDepth: data[offset++],
+			/* 0x11  BYTE */  flags: data[offset++]
 		};
 
 		// Set shortcut
-		this.header.hasEncoding = (this.header.imageType === Targa.Type.RLE_INDEXED || this.header.imageType === Targa.Type.RLE_RGB   || this.header.imageType === Targa.Type.RLE_GREY);
-		this.header.hasColorMap = (this.header.imageType === Targa.Type.RLE_INDEXED || this.header.imageType === Targa.Type.INDEXED);
-		this.header.isGreyColor = (this.header.imageType === Targa.Type.RLE_GREY    || this.header.imageType === Targa.Type.GREY);
+		this.header.hasEncoding = (this.header.imageType === Type.RLE_INDEXED || this.header.imageType === Type.RLE_RGB || this.header.imageType === Type.RLE_GREY);
+		this.header.hasColorMap = (this.header.imageType === Type.RLE_INDEXED || this.header.imageType === Type.INDEXED);
+		this.header.isGreyColor = (this.header.imageType === Type.RLE_GREY || this.header.imageType === Type.GREY);
 
 		// Check if a valid TGA file (or if we can load it)
-		checkHeader(this.header);
+		this.checkHeader(this.header);
 
 		// Move to data
 		offset += this.header.idLength;
@@ -421,23 +400,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 		// Read palette
 		if (this.header.hasColorMap) {
-			var colorMapSize  = this.header.colorMapLength * (this.header.colorMapDepth >> 3);
-			this.palette      = data.subarray( offset, offset + colorMapSize);
-			offset           += colorMapSize;
+			var colorMapSize = this.header.colorMapLength * (this.header.colorMapDepth >> 3);
+			this.palette = data.subarray(offset, offset + colorMapSize);
+			offset += colorMapSize;
 		}
 
-		var pixelSize  = this.header.pixelDepth >> 3;
-		var imageSize  = this.header.width * this.header.height;
+		var pixelSize = this.header.pixelDepth >> 3;
+		var imageSize = this.header.width * this.header.height;
 		var pixelTotal = imageSize * pixelSize;
 
 		// RLE encoded
 		if (this.header.hasEncoding) {
-			this.imageData = decodeRLE(data, offset, pixelSize, pixelTotal);
+			this.imageData = this.decodeRLE(data, offset, pixelSize, pixelTotal);
 		}
 
 		// RAW pixels
 		else {
-			this.imageData = data.subarray( offset, offset + (this.header.hasColorMap ? imageSize : pixelTotal) );
+			this.imageData = data.subarray(offset, offset + (this.header.hasColorMap ? imageSize : pixelTotal));
 		}
 	};
 
@@ -448,72 +427,69 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {object} imageData - Optional ImageData to work with
 	 * @returns {object} imageData
 	 */
-	Targa.prototype.getImageData = function targaGetImageData( imageData )
-	{
-		var width  = this.header.width;
+	public getImageData = (imageData: any) => {
+		var width = this.header.width;
 		var height = this.header.height;
-		var origin = (this.header.flags & Targa.Origin.MASK) >> Targa.Origin.SHIFT;
+		var origin = (this.header.flags & Origin.MASK) >> Origin.SHIFT;
 		var x_start, x_step, x_end, y_start, y_step, y_end;
 		var getImageData;
 
-			// Create an imageData
+		// Create an imageData
 		if (!imageData) {
 			if (document) {
-				imageData = document.createElement('canvas').getContext('2d').createImageData(width, height);
-			}
-			// In Thread context ?
-			else {
+				imageData = document.createElement('canvas').getContext('2d')!.createImageData(width, height);
+			} else {
 				imageData = {
-					width:  width,
+					width: width,
 					height: height,
 					data: new Uint8ClampedArray(width * height * 4)
 				};
 			}
 		}
 
-		if (origin === Targa.Origin.TOP_LEFT || origin === Targa.Origin.TOP_RIGHT) {
+		if (origin === Origin.TOP_LEFT || origin === Origin.TOP_RIGHT) {
 			y_start = 0;
-			y_step  = 1;
-			y_end   = height;
+			y_step = 1;
+			y_end = height;
 		}
 		else {
 			y_start = height - 1;
-			y_step  = -1;
-			y_end   = -1;
+			y_step = -1;
+			y_end = -1;
 		}
 
-		if (origin === Targa.Origin.TOP_LEFT || origin === Targa.Origin.BOTTOM_LEFT) {
+		if (origin === Origin.TOP_LEFT || origin === Origin.BOTTOM_LEFT) {
 			x_start = 0;
-			x_step  = 1;
-			x_end   = width;
+			x_step = 1;
+			x_end = width;
 		}
 		else {
 			x_start = width - 1;
-			x_step  = -1;
-			x_end   = -1;
+			x_step = -1;
+			x_end = -1;
 		}
 
 		// TODO: use this.header.offsetX and this.header.offsetY ?
 
 		switch (this.header.pixelDepth) {
 			case 8:
-				getImageData = this.header.isGreyColor ? getImageDataGrey8bits : getImageData8bits;
+				getImageData = this.header.isGreyColor ? this.getImageDataGrey8bits : this.getImageData8bits;
 				break;
 
 			case 16:
-				getImageData = this.header.isGreyColor ? getImageDataGrey16bits : getImageData16bits;
+				getImageData = this.header.isGreyColor ? this.getImageDataGrey16bits : this.getImageData16bits;
 				break;
 
 			case 24:
-				getImageData = getImageData24bits;
+				getImageData = this.getImageData24bits;
 				break;
 
 			case 32:
-				getImageData = getImageData32bits;
+				getImageData = this.getImageData32bits;
 				break;
 		}
 
-		getImageData(imageData.data, this.imageData, this.palette, width, y_start, y_step, y_end, x_start, x_step, x_end);
+		getImageData && getImageData(imageData.data, this.imageData, this.palette, width, y_start, y_step, y_end, x_start, x_step, x_end);
 		return imageData;
 	};
 
@@ -523,17 +499,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 *
 	 * @returns {object} CanvasElement
 	 */
-	Targa.prototype.getCanvas = function targaGetCanvas( canvas )
-	{
-		var ctx, imageData;
-
+	public getCanvas = (canvas?: HTMLCanvasElement): HTMLCanvasElement => {
 		if (!canvas) {
 			canvas = document.createElement('canvas');
 		}
-		ctx = canvas.getContext('2d');
-		imageData = ctx.createImageData(this.header.width, this.header.height);
+		const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+		const imageData = ctx.createImageData(this.header.width, this.header.height);
 
-		canvas.width  = this.header.width;
+		canvas.width = this.header.width;
 		canvas.height = this.header.height;
 
 		ctx.putImageData(this.getImageData(imageData), 0, 0);
@@ -548,33 +521,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	 * @param {string} type - Optional image content-type to output (default: image/png)
 	 * @returns {string} url
 	 */
-	Targa.prototype.getDataURL = function targaGetDatURL( type )
-	{
+	public getDataURL = (type: string) => {
 		return this.getCanvas().toDataURL(type || 'image/png');
 	};
-
-
-	// Find Context
-	var shim = {};
-	if (typeof(exports) === 'undefined') {
-		// if (typeof(define) === 'function' && typeof(define.amd) === 'object' && define.amd) {
-		// 	define(function(){
-		// 		return Targa;
-		// 	});
-		// } else {
-			// Browser
-			shim.exports = typeof(window) !== 'undefined' ? window : _global;
-		// }
-	} 
-	else {
-		// Commonjs
-		shim.exports = exports;
-	}
-
-
-	// Export
-	if (shim.exports) {
-		shim.exports.TGA = Targa;
-	}
-
-})(this);
+};
