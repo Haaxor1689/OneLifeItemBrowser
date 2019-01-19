@@ -4,38 +4,33 @@
   "private": true,
   "homepage": "https://haaxor1689.github.io/OneLifeItemBrowser",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.9",
-    "@fortawesome/free-solid-svg-icons": "^5.6.0",
-    "@fortawesome/react-fontawesome": "^0.1.3",
-    "@types/jquery": "^3.3.22",
-    "@types/lodash.clonedeep": "^4.5.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.12",
+    "@fortawesome/free-solid-svg-icons": "^5.6.3",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "@types/jest": "23.3.13",
+    "@types/node": "10.12.18",
+    "@types/react": "16.7.20",
+    "@types/react-dom": "16.0.11",
     "@types/reactstrap": "^6.4.4",
     "bootstrap": "^4.2.1",
-    "jquery": "^3.3.1",
-    "lodash.clonedeep": "^4.5.0",
+    "gh-pages": "^2.0.1",
     "node-sass": "^4.11.0",
-    "popper.js": "^1.14.6",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
     "react-scripts": "2.1.3",
-    "react-scripts-ts": "^4.0.8",
-    "reactstrap": "^7.1.0"
+    "reactstrap": "^7.1.0",
+    "typescript": "3.2.4"
   },
   "scripts": {
-    "start": "set HTTPS=true&&set PORT=3006&&react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "eject": "react-scripts-ts eject"
+    "deploy": "gh-pages -d build"
   },
-  "devDependencies": {
-    "@types/jest": "^23.3.10",
-    "@types/node": "^10.12.11",
-    "@types/react": "^16.7.11",
-    "@types/react-dom": "^16.0.11",
-    "gh-pages": "^2.0.1",
-    "typescript": "^3.2.1"
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "browserslist": [
     ">0.2%",
