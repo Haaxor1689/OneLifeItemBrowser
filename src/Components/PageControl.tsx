@@ -20,11 +20,11 @@ export default class PageControl extends React.Component<IPageControlProps> {
             ? this.props.pageCount - 3 
             : this.props.currentPage;
 
-    private renderPage = (page: number): JSX.Element => (
+    private renderPage = (page: number): JSX.Element | null => page < this.props.pageCount ? (
         <PaginationItem active={page === this.props.currentPage}>
             <PaginationLink onClick={() => this.props.changePage(page)}>{page + 1}</PaginationLink>
         </PaginationItem>
-    );
+    ) : null;
 
     private renderDots = (): JSX.Element => (
         <PaginationItem disabled>
