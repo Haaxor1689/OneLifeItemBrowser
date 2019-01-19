@@ -1,13 +1,13 @@
 {
-  "main.css": "/OneLifeItemBrowser/static/css/main.c052e45a.chunk.css",
-  "main.js": "/OneLifeItemBrowser/static/js/main.2e52cfa7.chunk.js",
-  "main.js.map": "/OneLifeItemBrowser/static/js/main.2e52cfa7.chunk.js.map",
-  "static/js/1.1a104c92.chunk.js": "/OneLifeItemBrowser/static/js/1.1a104c92.chunk.js",
-  "static/js/1.1a104c92.chunk.js.map": "/OneLifeItemBrowser/static/js/1.1a104c92.chunk.js.map",
+  "main.css": "/OneLifeItemBrowser/static/css/main.9605a9a8.chunk.css",
+  "main.js": "/OneLifeItemBrowser/static/js/main.aabaf1d8.chunk.js",
+  "main.js.map": "/OneLifeItemBrowser/static/js/main.aabaf1d8.chunk.js.map",
+  "static/js/1.773b3639.chunk.js": "/OneLifeItemBrowser/static/js/1.773b3639.chunk.js",
+  "static/js/1.773b3639.chunk.js.map": "/OneLifeItemBrowser/static/js/1.773b3639.chunk.js.map",
   "runtime~main.js": "/OneLifeItemBrowser/static/js/runtime~main.1c88e221.js",
   "runtime~main.js.map": "/OneLifeItemBrowser/static/js/runtime~main.1c88e221.js.map",
-  "static/css/main.c052e45a.chunk.css.map": "/OneLifeItemBrowser/static/css/main.c052e45a.chunk.css.map",
+  "static/css/main.9605a9a8.chunk.css.map": "/OneLifeItemBrowser/static/css/main.9605a9a8.chunk.css.map",
   "index.html": "/OneLifeItemBrowser/index.html",
-  "precache-manifest.29770cfd1ea7155d2dfa1e1c58ccc9c5.js": "/OneLifeItemBrowser/precache-manifest.29770cfd1ea7155d2dfa1e1c58ccc9c5.js",
+  "precache-manifest.a58c012a68d689ed59ae9ec4b37ceb74.js": "/OneLifeItemBrowser/precache-manifest.a58c012a68d689ed59ae9ec4b37ceb74.js",
   "service-worker.js": "/OneLifeItemBrowser/service-worker.js"
 }

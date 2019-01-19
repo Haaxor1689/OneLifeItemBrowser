@@ -11,11 +11,10 @@
  * See https://goo.gl/2aRDsh
  */
 
-importScripts("/OneLifeItemBrowser/workbox-v3.6.3/workbox-sw.js");
-workbox.setConfig({modulePathPrefix: "/OneLifeItemBrowser/workbox-v3.6.3"});
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/OneLifeItemBrowser/precache-manifest.29770cfd1ea7155d2dfa1e1c58ccc9c5.js"
+  "/OneLifeItemBrowser/precache-manifest.a58c012a68d689ed59ae9ec4b37ceb74.js"
 );
 
 workbox.clientsClaim();
