@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
 
+import uniqBy from 'lodash.uniqby';
+
 import KeyValue from './KeyValue';
 
 import SpriteRendererService from './../Services/SpriteRendererService';
@@ -24,7 +26,7 @@ export default class ObjectRecord extends React.Component<IObjectRecordComponent
     private renderSpriteInfo = (sprite: Sprite): JSX.Element => (
         <Col xs="6" md="4" lg="3" className="col-6 sprite-info">
             <div className="sprite-info-preview">
-                <canvas id={sprite.toString()} className="sprite" />
+                <canvas id={sprite.id.toString()} className="sprite" />
             </div>
             <KeyValue keyStr="Id" value={sprite.id} />
             <KeyValue keyStr="Parent" value={sprite.parent} />
@@ -58,7 +60,7 @@ export default class ObjectRecord extends React.Component<IObjectRecordComponent
                 </Col>
             </Row>
             <Row>
-                {this.props.objectRecord.sprites.map(this.renderSpriteInfo)}
+                {uniqBy(this.props.objectRecord.sprites, sprite => sprite.id).map(this.renderSpriteInfo)}
             </Row>
         </Container>
     );
