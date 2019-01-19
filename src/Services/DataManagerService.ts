@@ -9,12 +9,12 @@ export default class DataManagerService {
             message: "Fetching records...",
         })
         try {
-            var response = await Api.getRecords();
+            var response = await Api.updateRecords();
 
             switch (response.outdated) {
             case false:
                 onProgress(undefined);
-                return response.records;
+                return await Api.getRecords();
             case true:
                 onProgress(response.progress);
                 DataManagerService.waitForUpdate(onProgress, done);
@@ -36,12 +36,12 @@ export default class DataManagerService {
         try {
             do {
                 await DataManagerService.sleep(3000);
-                var response = await Api.getRecords();
+                var response = await Api.updateRecords();
     
                 switch (response.outdated) {
                 case false:
                     onProgress(undefined);
-                    done(response.records);
+                    done(await Api.getRecords());
                     return;
                 case true:
                     onProgress(response.progress);
