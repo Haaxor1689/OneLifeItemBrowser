@@ -557,14 +557,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 	// Find Context
 	var shim = {};
 	if (typeof(exports) === 'undefined') {
-		if (typeof(define) === 'function' && typeof(define.amd) === 'object' && define.amd) {
-			define(function(){
-				return Targa;
-			});
-		} else {
+		// if (typeof(define) === 'function' && typeof(define.amd) === 'object' && define.amd) {
+		// 	define(function(){
+		// 		return Targa;
+		// 	});
+		// } else {
 			// Browser
 			shim.exports = typeof(window) !== 'undefined' ? window : _global;
-		}
+		// }
 	} 
 	else {
 		// Commonjs
