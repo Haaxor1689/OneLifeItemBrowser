@@ -40,6 +40,7 @@ export default class App extends React.Component<{}, IAppState> {
         this.setState((prevState) => ({
             ...prevState,
             objectRecords,
+            filteredCount: Object.keys(objectRecords).length,
         }));
     }
 
