@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/OneLifeItemBrowser/static/css/main.9605a9a8.chunk.css"
   },
   {
-    "revision": "a15557308924656e871a835fd44db48d",
+    "revision": "0e63c29a9e37864a1d45fbd5bd844b2c",
     "url": "/OneLifeItemBrowser/index.html"
   }
 ];

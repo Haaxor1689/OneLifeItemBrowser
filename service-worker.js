@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/OneLifeItemBrowser/precache-manifest.32d9d8d31bddaca88c9b2074271111ea.js"
+  "/OneLifeItemBrowser/precache-manifest.0157abcd0c88cc22014de9ad0aa13728.js"
 );
 
 workbox.clientsClaim();
