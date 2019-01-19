@@ -1,0 +1,7 @@
+.data-loading {
+    margin: 1rem 0;
+
+    p {
+        @extend .text-center;
+    }
+}

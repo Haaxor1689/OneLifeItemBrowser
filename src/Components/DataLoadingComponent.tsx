@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Col, Alert, Progress } from 'reactstrap';
+
 import IProgressInfo from 'src/Models/IProgressInfo';
 
 interface IDataLoadingComponent {
@@ -6,23 +8,18 @@ interface IDataLoadingComponent {
 }
 
 export default class DataLoadingComponent extends React.Component<IDataLoadingComponent, {}> {
-    private bgStyle = (): string => this.props.progress.percent < 0 ? "danger" : "info";
+    private bgColor = (): string => this.props.progress.percent < 0 ? "danger" : "info";
+
+    private getProgress = (): number => (this.props.progress.percent < 0 ? 1 : this.props.progress.percent) * 100;
 
     public render = () => {
         return (
-            <div className="col data-loading">
-                <div className={"alert alert-" + this.bgStyle()} role="alert">
-                    <p className="text-center">{this.props.progress.message}</p>
-                    <div className="progress">
-                        <div className={"progress-bar progress-bar-striped progress-bar-animated bg-" + this.bgStyle()}
-                            role="progressbar"
-                            aria-valuenow={(this.props.progress.percent < 0 ? 1 : this.props.progress.percent) * 100}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
-                            style={{flex: this.props.progress.percent < 0 ? 1 : this.props.progress.percent}}></div>
-                    </div>
-                </div>
-            </div>
+            <Col className="data-loading">
+                <Alert color={this.bgColor()}>
+                    <p>{this.props.progress.message}</p>
+                    <Progress value={this.getProgress()} color={this.bgColor()} striped animated />
+                </Alert>
+            </Col>
         );
     }
 }

@@ -1,9 +1,10 @@
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+@import './Components/DataLoading';
+
 body {
     padding-top: 4.5rem;
-}
-
-.data-loading {
-    margin: 1rem 0;
 }
 
 .key-str {

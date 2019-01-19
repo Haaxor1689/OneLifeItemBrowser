@@ -1,13 +1,14 @@
 import * as React from 'react';
+import { Container, Row } from 'reactstrap';
 
-import ObjectRecord, { IObjectRecordContainer } from './Models/ObjectRecord';
-import RecordListComponent from './Components/RecordListComponent';
-import DataLoadingComponent from './Components/DataLoadingComponent';
-import NavbarComponent from './Components/NavbarComponent';
-import PageControlComponent from './Components/PageControlComponent';
-import DataManagerService from './Services/DataManagerService';
-import IProgressInfo from './Models/IProgressInfo';
-import ObjectRecordComponent from './Components/ObjectRecordComponent';
+import ObjectRecord, { IObjectRecordContainer } from '../Models/ObjectRecord';
+import RecordListComponent from './RecordListComponent';
+import DataLoadingComponent from './DataLoadingComponent';
+import NavbarComponent from './NavbarComponent';
+import PageControlComponent from './PageControlComponent';
+import DataManagerService from '../Services/DataManagerService';
+import IProgressInfo from '../Models/IProgressInfo';
+import ObjectRecordComponent from './ObjectRecordComponent';
 
 interface IAppState {
     objectRecords: IObjectRecordContainer;
@@ -95,36 +96,34 @@ export default class App extends React.Component<{}, IAppState> {
         }));
     }
 
-    public render() {
-        return (
-            <div>
-                <NavbarComponent onSearch={this.onSearchSubmit}/>
-                <main role="main">
-                    <div className="container">
-                        <div className="row">
-                            { this.showLoading() &&
-                                <DataLoadingComponent progress={this.state.progress!} /> }
-                        </div>
-                    </div>
-                    { !this.state.selectedRecord 
-                    ?
-                        <div className="container">
-                            <div className="row">
-                                <RecordListComponent objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} />
-                            </div>
-                            <div className="row">
-                                { this.showPageControll() &&
-                                    <PageControlComponent 
-                                        currentPage={this.state.currentPage} 
-                                        pageCount={Math.ceil(this.state.filteredCount / this.state.itemsPerPage) - 1}
-                                        changePage={this.onChangePage} /> }
-                            </div>
-                        </div>
-                    :
-                        <ObjectRecordComponent objectRecord={this.state.objectRecords[this.state.selectedRecord]} close={this.onObjectClosed} />
-                    }
-                </main>
-            </div>
-        );
-    }
+    public render = (): JSX.Element => (
+        <div>
+            <NavbarComponent onSearch={this.onSearchSubmit}/>
+            <main role="main">
+                <Container>
+                    <Row>
+                        { this.showLoading() &&
+                            <DataLoadingComponent progress={this.state.progress!} /> }
+                    </Row>
+                </Container>
+                { !this.state.selectedRecord 
+                ?
+                    <Container>
+                        <Row>
+                            <RecordListComponent objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} />
+                        </Row>
+                        <Row>
+                            { this.showPageControll() &&
+                                <PageControlComponent 
+                                    currentPage={this.state.currentPage} 
+                                    pageCount={Math.ceil(this.state.filteredCount / this.state.itemsPerPage) - 1}
+                                    changePage={this.onChangePage} /> }
+                        </Row>
+                    </Container>
+                :
+                    <ObjectRecordComponent objectRecord={this.state.objectRecords[this.state.selectedRecord]} close={this.onObjectClosed} />
+                }
+            </main>
+        </div>
+    );
 }

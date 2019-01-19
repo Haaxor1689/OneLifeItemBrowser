@@ -5,7 +5,7 @@ import IProgressInfo from 'src/Models/IProgressInfo';
 export default class DataManagerService {
     public static initialize = async (onProgress: (progress?: IProgressInfo) => void, done: (objectRecords: IObjectRecordContainer) => void): Promise<IObjectRecordContainer> => {
         onProgress({
-            percent: 0,
+            percent: 1,
             message: "Fetching records...",
         })
         try {
