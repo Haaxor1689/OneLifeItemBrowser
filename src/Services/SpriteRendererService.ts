@@ -30,7 +30,7 @@ export default class SpriteRendererService {
 
         const spriteCanvases = await Promise.all(spritePromises);
         const spriteInfos = spriteCanvases.map((canvas, index): SpriteInfo => ({ sprite: sprites[index], canvas}));
-        console.log(spriteInfos);
+        
         for (var i = 0; i < sprites.length; ++i) {
             SpriteRendererService.addSprite(i, spriteInfos, context);
         }

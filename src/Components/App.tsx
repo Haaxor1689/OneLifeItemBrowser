@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Container, Row } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 import RecordList from './RecordList';
 import DataLoading from './DataLoading';
 import NavbarComponent from './NavbarComponent';
-import PageControlComponent from './PageControlComponent';
+import PageControl, { IPageControlProps } from './PageControl';
 import DataManagerService from '../Services/DataManagerService';
 import IProgressInfo from '../Models/IProgressInfo';
 import ObjectRecord from './ObjectRecord';
@@ -48,9 +48,13 @@ export default class App extends React.Component<{}, IAppState> {
             .filter((object) => App.stringContains(object.description, this.state.filter))
             .slice(this.state.currentPage * this.state.itemsPerPage, this.state.currentPage * this.state.itemsPerPage + this.state.itemsPerPage);
 
-    private showLoading = (): boolean => this.state.progress !== undefined;
+    private getPageControlProps = (): IPageControlProps => ({
+        currentPage: this.state.currentPage,
+        pageCount: Math.ceil(this.state.filteredCount / this.state.itemsPerPage) - 1,
+        changePage: this.onChangePage,
+    });
 
-    private showPageControll = (): boolean => Object.keys(this.state.objectRecords).length > this.state.itemsPerPage;
+    private showLoading = (): boolean => this.state.progress !== undefined;
 
     private static stringContains = (source: string, substr: string): boolean => source.toLowerCase().indexOf(substr.toLowerCase()) >= 0;
 
@@ -98,33 +102,23 @@ export default class App extends React.Component<{}, IAppState> {
         }));
     }
 
+    private renderTabel = (): JSX.Element => (
+        <Container>
+            <RecordList objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} />
+            { this.state.filteredCount > this.state.itemsPerPage && <PageControl { ...this.getPageControlProps() } /> }
+        </Container>
+    )
+
+    private renderObjectRecord = (): JSX.Element => (
+        <ObjectRecord objectRecord={this.state.objectRecords[this.state.selectedRecord!]} close={this.onObjectClosed} />
+    )
+
     public render = (): JSX.Element => (
         <div>
             <NavbarComponent onSearch={this.onSearchSubmit}/>
             <main role="main">
-                <Container>
-                    <Row>
-                        { this.showLoading() &&
-                            <DataLoading progress={this.state.progress!} /> }
-                    </Row>
-                </Container>
-                { !this.state.selectedRecord 
-                ?
-                    <Container>
-                        <Row>
-                            <RecordList objectRecord={this.getFilteredObjects()} onObjectSelected={this.onObjectSelected} />
-                        </Row>
-                        <Row>
-                            { this.showPageControll() &&
-                                <PageControlComponent 
-                                    currentPage={this.state.currentPage} 
-                                    pageCount={Math.ceil(this.state.filteredCount / this.state.itemsPerPage) - 1}
-                                    changePage={this.onChangePage} /> }
-                        </Row>
-                    </Container>
-                :
-                    <ObjectRecord objectRecord={this.state.objectRecords[this.state.selectedRecord]} close={this.onObjectClosed} />
-                }
+                { this.showLoading() && <DataLoading progress={this.state.progress!} /> }
+                { this.state.selectedRecord ? this.renderObjectRecord() : this.renderTabel() }
             </main>
         </div>
     );
